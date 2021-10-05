@@ -1,8 +1,6 @@
 import React, { useReducer } from 'react';
 import reducer, { initialState } from './reducers';
-import { changeOperation } from './actions';
-import { applyNumber } from './actions';
-import { clearDisplay } from './actions';
+import { changeOperation, applyNumber, clearDisplay, memoryAdd, memoryRecall, memoryClear } from './actions';
 
 import './App.css';
 
@@ -11,22 +9,30 @@ import CalcButton from './components/CalcButton';
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  //  console.log('state:', state, state.memory, state.operation);
   const handleClick = number => {
     dispatch(applyNumber(number));
   }
-  //  const handleClick = (number) => {
-  //    dispatch(addOne(number));
-  //  }
+
   const handleOperation = operator => {
     dispatch(changeOperation(operator));
   }
 
-  const handleClearDisplay = () =>{
+  const handleClearDisplay = () => {
     dispatch(clearDisplay());
   }
 
+  const handleMemory = action => {
+    if (action === 'M+') {
+      dispatch(memoryAdd());
+    } else if (action === 'MR') {
+      dispatch(memoryRecall());
+    } else {
+      dispatch(memoryClear());
+    }
+  }
+
   return (
+    
     <div className="App">
       <nav className="navbar navbar-dark bg-dark">
         <a className="navbar-brand" href="#"><img width="40px" src="./Lambda-Logo-Red.png" alt='Lambda' /> Lambda Reducer Challenge</a>
@@ -43,9 +49,9 @@ function App() {
             </div>
 
             <div className="row">
-              <CalcButton value={"M+"} />
-              <CalcButton value={"MR"} />
-              <CalcButton value={"MC"} />
+              <CalcButton value={"M+"} onClick={() => handleMemory('M+')} />
+              <CalcButton value={"MR"} onClick={() => handleMemory('MR')} />
+              <CalcButton value={"MC"} onClick={() => handleMemory('MC')} />
             </div>
 
             <div className="row">
@@ -73,7 +79,7 @@ function App() {
             </div>
 
             <div className="row ce_button">
-              <CalcButton value={"CE"} onClick={()=> handleClearDisplay()}/>
+              <CalcButton value={"CE"} onClick={() => handleClearDisplay()} />
             </div>
 
           </form>
